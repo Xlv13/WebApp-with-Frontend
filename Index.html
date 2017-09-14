@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <meta charset="utf-8">
+    <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script>
+        $.get("http://10.27.82.34:8080/departments", function (data, status) {
+            if (typeof data != "string") { 
+                data = JSON.stringify(data);
+            }
+            var keyValues = data.split("\"");
+            data = $.parseJSON(data);
+            var ids = data[keyValues[1]];
+            if (typeof id != "string") {
+                ids = ids + "";
+                ids = ids.split(",");
+            }
+            for (i = 0; i < ids.length; i++) {
+                $.get("http://10.27.82.34:8080/department/".concat(ids[i]), function (dataToGet, statusToGet) {
+                    if (typeof dataToGet != "string") {
+                        dataToGet = JSON.stringify(dataToGet);
+                    }
+                    var keyValue = dataToGet.split("\"");
+                    dataToGet = $.parseJSON(dataToGet);
+                    var departmentName = dataToGet[keyValue[1]];
+                    $(document).ready(function () {
+                        jQuery('body').append('<p class="bg-danger">' + departmentName + '</p>');
+
+                    });
+                    var employees = dataToGet[keyValue[5]];
+                    for (j = 0; j < employees.length; j++) {
+                        if (employees[j].employeeName != null) {
+                            $(document).ready(function () {
+                                jQuery('body').append('<pre>' + employees[j].employeeId + ". " + employees[j].employeeName + '</pre>');
+                            });
+                        }
+                    }
+                    $(document).ready(function () {
+                        jQuery('body').append('<br>' + '</div>');
+                    });
+
+                })
+            }
+        });
+    </script>
+</head>
+
+<body>
+</body>
+
+</html>
